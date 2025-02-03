@@ -23,7 +23,7 @@ def clear_headers(dir):
         f.write(output)
 
 def dir_to_server_call(dir):
-    dir = dir.split(root + "\\data\\")[1].split("\\tags\\functions\\")
+    dir = dir.split(root + "\\data\\")[1].split("\\tags\\function\\")
 
     namespace = dir[0]
     advanement = dir[1].replace("\\", "/").split(".")[0]
@@ -31,7 +31,7 @@ def dir_to_server_call(dir):
     return f"server {namespace}:{advanement}"
 
 def dir_to_advancement(dir):
-    dir = dir.split(root + "\\data\\")[1].split("\\advancements\\")
+    dir = dir.split(root + "\\data\\")[1].split("\\advancement\\")
 
     namespace = dir[0]
     advanement = dir[1].replace("\\", "/").split(".")[0]
@@ -39,7 +39,7 @@ def dir_to_advancement(dir):
     return f"advancement {namespace}:{advanement}"
 
 def dir_to_mcfunction(dir):
-    dir = dir.split(root + "\\data\\")[1].split("\\functions\\")
+    dir = dir.split(root + "\\data\\")[1].split("\\function\\")
     
     namespace = dir[0]
     function = dir[1].replace("\\", "/").split(".")[0]
@@ -217,7 +217,7 @@ def add_to_log(string):
     log += string
 
 def is_server(dir):
-    return "data\\minecraft\\tags\\functions\\" in dir
+    return "data\\minecraft\\tags\\function\\" in dir
 
 def get_server_callers(dir):
     if is_server(dir):
