@@ -6,6 +6,7 @@ log = ""
 
 function_map = {}
 macros = []
+parameters = {}
 
 def clear_headers(dir):
     with open(dir, "r") as f:
@@ -104,7 +105,7 @@ def relative_call(caller, function):
         namespace = split[1]
 
     if(namespace == function_namespace):
-        output = output.replace(namespace, ".", 1)
+        output = output.replace(namespace, ".")
     return output
 
 def add_caller(caller, function):
@@ -138,6 +139,18 @@ def on_functions(dir, function):
 def get_docs(function):
     if function in function_map:
         output = ""
+
+        function_parameters = parameters[function]
+        if(function_parameters):
+            output += "\n#> === parameters ===\n"
+
+            for parameter in function_parameters:
+                output += f"#> {parameter}\n"
+
+            output += "\n"
+
+        output += "#> ===  callers  ===\n"
+
         called_from = function_map[function]
         calls_self = False
 
@@ -148,6 +161,8 @@ def get_docs(function):
                 output += "#> " + relative_call(call, function) + "\n"
         if calls_self:
             output += "#> self\n"
+
+
 
         return output + "\n"
     else:
@@ -194,6 +209,24 @@ def get_all_callers(dir):
             else:
                 get_caller(called_from, "")
 
+def get_parameters(line):
+    return re.findall(r'\$\((.*?)\)', line)
+
+def get_all_parameters(dir):
+    with open(dir, "r") as f:
+        mcfunction = dir_to_mcfunction(dir)
+
+        lines = f.readlines()
+        function_parameters = []
+        for line in lines:
+            parameters_on_line = get_parameters(line)
+
+            for parameter in parameters_on_line:
+                if parameter not in function_parameters:
+                    function_parameters.append(parameter)
+
+        parameters[mcfunction] = function_parameters
+
 def is_advancement(json_data):
     return "rewards" in json_data
 
@@ -237,6 +270,9 @@ def process_files(folder_path):
     run_on_tree(folder_path, clear_headers, ("mcfunction"))
     run_on_tree(folder_path, get_all_macros, ("mcfunction"))
     run_on_tree(folder_path, get_all_callers, ("mcfunction"))
+    
+    run_on_tree(folder_path, get_all_parameters, ("mcfunction"))
+
     run_on_tree(folder_path, insert_docs, ("mcfunction"))
     
     write_to_log()
