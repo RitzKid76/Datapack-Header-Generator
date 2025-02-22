@@ -142,7 +142,7 @@ def get_docs(function):
 
         function_parameters = parameters[function]
         if(function_parameters):
-            output += "\n#> === parameters ===\n"
+            output += "#> === parameters ===\n"
 
             for parameter in function_parameters:
                 output += f"#> {parameter}\n"
