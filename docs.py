@@ -137,20 +137,20 @@ def on_functions(dir, function):
                 function(called_from, mcfunction)
 
 def get_docs(function):
+    output = ""
+    function_parameters = parameters[function]
+
+    if(function_parameters):
+        output += "#> === parameters ===\n"
+
+        for parameter in function_parameters:
+            output += f"#> {parameter}\n"
+
+        output += "\n"
+
+    output += "#> ===  callers  ===\n"
+
     if function in function_map:
-        output = ""
-
-        function_parameters = parameters[function]
-        if(function_parameters):
-            output += "#> === parameters ===\n"
-
-            for parameter in function_parameters:
-                output += f"#> {parameter}\n"
-
-            output += "\n"
-
-        output += "#> ===  callers  ===\n"
-
         called_from = function_map[function]
         calls_self = False
 
@@ -162,12 +162,11 @@ def get_docs(function):
         if calls_self:
             output += "#> self\n"
 
-
-
         return output + "\n"
     else:
         add_to_log(f"POTENTIAL UNUSED FUNCTION: {function}\n")
-        return "#> unknown\n\n"
+        output += "#> unknown\n"
+        return output + "\n"
 
 def insert_docs(dir):
     with open(dir, "r") as f:
