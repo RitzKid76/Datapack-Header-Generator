@@ -2,14 +2,18 @@ import os
 
 accepable_file_types = ("json", "mcfunction", "txt")
 
+def clean_line(line):
+    return line.rstrip() + "\n"
+
+
 def remove_extra_newlines(file_path):
-    with open(file_path, 'r+') as file:
-        f = file.read()
-        file.seek(0)
-        file.truncate(0)
-        
-        file.write(''.join(f).rstrip('\n') + '\n')
-        
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+
+    with open(file_path, 'w') as f:
+        for line in lines:
+            f.write(clean_line(line))
+
 def process_files(folder_path):
     items = os.listdir(folder_path)
 
